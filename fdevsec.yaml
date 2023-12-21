@@ -2,7 +2,7 @@ version: v1
 
 id:
   org: 2e3b7756-bbaa-4d09-8ee1-8beabd0c6a2c
-  app: <insert app id here>    
+  app: da67b8e3-deca-4f80-ac9c-a88571f69e92 
 
 # Optional parameters.
 scanners:
@@ -14,6 +14,3 @@ scanners:
 
 resource:
   serial_scan: false
-
-fail_pipeline:
-  risk_rating: 7
