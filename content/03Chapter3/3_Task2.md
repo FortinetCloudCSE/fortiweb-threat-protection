@@ -1,63 +1,76 @@
 ---
-title: "Task 1 - Push content to your repo"
-menuTitle: "Git push/Auto-publish"
-chapter: false
-weight: 2
+title: "Task 2 - Bot Detection - Defense"
+menuTitle: "Bot Defense"
+weight: 1
 ---
 
-### Push your content to GitHubo repo
 
-- When you're satisfied with the look and feel of your workshop guide locally, **from your local workstation CLI**, push the newly created Hugo site up to GitHub to automatically publish your Hugo Site
+### Biometrics based bot detection:
 
-   ```shell
-     git add .
-     git commit -m "<my commit message>"
-     git push 
-   ``` 
 
-- Remember we're always working in a Git Branch, so you should get in the habit of issuing a Pull request and merge [using our GitFlow procedure](gitflow.html)
+Now let’s see how FortiWeb will protect the Juice shop from the Bot you ran during the attack module.
 
-  {{% notice info %}} This is mostly applicable when working in a collaborative environment where multiple people may be pushing to the repo with different branches/PR to main.  Strictly speaking, if you're the only person working on this repo and/or it's your first push, this step isn't 100% necessary {{% /notice %}}
+1) Create a Biometrics based Bot detection by clicking create new as shown below:
 
-  ```shell 
-            # locally checkout the main branch
-        git checkout main
-            # pull the latest version of main from GitHub to your local repo 
-        git pull
-            # locally checkout your feature branch
-        git checkout <branch>
-            # locally perform an interactive rebase which locally pull commits from main into my branch
-        git rebase main -i 
-            # push my local branch (which now includes the latest changes from GH main) up to GitHub remote
-        git push --force
-  
-        ########### WAIT FOR PR APPROVAL
-    ```
-- Create a PR on GitHub, being sure to select your branch to merge with main. Wait for approval
-   
-     ![PRScreenshot](GH-PR.jpg)
-   - {{% notice info %}} You will not be able to merge the the PR until receiving approval from Jeff or Rob.  They will receive an email for review, but it's a good idea to ping them as a reminder. {{% /notice %}}
-     ![PRmergeblock](PR-mergeblocked.jpg)
-  - Once your PR is approved, checkout the main branch and perform a fast-forward merge and force push to complete the workflow.
-  
-      ```shell 
-            # locally checkout the main branch
-        git checkout main
-            # locally merge myFeatureBranch into main with a fast-forward merge scheme
-        git merge <feature branch name> --ff-only
-            # push local main (which now has myFeatureBranch merged into it) up to GitHub remote  
-            # because this push includes the merge it will auto close the PullRequest
-        git push
-      ```
-    
-- Once your PR has been approved and your code is in the **_main_** branch, GitHub actions will automatically publish the contents of **/docs** folder to GitHub Pages
-  {{% notice tip %}} Remember, Hugo's build wrote the static html pages to the **/public** directory in the container, which is mapped to your **/docs** folder in your local repo{{% /notice %}}
+![image-20220602174031590](../images/image-20220602174031590.png)
 
-### GitHub Action to Auto Publish
-- The file workflows/static.yaml is already included in your repo and triggers a GitHub Action to build and publish your Hugo site every time you push content to GitHub.
-- Action:
-  - Build a Hugo container with all of our customizations
-  - Issue a Hugo Build command to create static HTML site
-  - Publish resulting HTML to GitHub Pages for your repo
-- You can see action progress and errors in the **Actions** Tab on your repo
+ 
 
+2. We can monitor for Various client events as shown below. However lets uncheck the default values and only select Screen Touch for now. 
+
+​        Also change the event collection period to 10 seconds. Fortiweb will monitor the client activities for 10 seconds before it confirms the client is a bot. 
+
+​		Click OK.
+
+![image-20220602174043154](../images/image-20220602174043154.png)
+
+3) Click Create New for the URL Fortiweb will monitor these events on. If you look here the action is set to Alert. Let's change it to Alert and Deny so that the bot gets blocked. 
+
+![image-20220602175041951](../images/image-20220602175041951.png)
+
+ 
+
+4) Select Regular expression, and **.\*** to match all the URL’s. 
+
+​		Click OK.
+
+![image-20220602175047682](../images/image-20220602175047682.png)
+
+5) Now Let’s create a Bot Mitigation Policy and attach the Bio metrics-based bot detection rule which we created in the earlier step. 
+
+![image-20220602175057192](../images/image-20220602175057192.png)
+
+
+
+![image-20220602175129148](../images/image-20220602175129148.png)
+
+
+
+6) To apply this to the Juice Shop protection profile, Navigate to Policy >> Web protection profile >> click the juiceshop profile we create earlier. 
+
+![image-20220602175137151](../images/image-20220602175137151.png)
+
+
+7. Scroll to Bot Mitigation and assign the policy we created in Step 5. 
+
+​		Click OK.
+
+![image-20220602175142839](../images/image-20220602175142839.png)
+
+8. Repeat the same steps from attack lab to run the bot again:
+
+​		After 10 seconds the bot will crash with a crash log on the terminal. 
+
+![image-20220602175253559](../images/image-20220602175253559.png)
+
+9. On Fortiweb if you go to Log >> log and report >> attack log: 
+
+​		You should see an attack log generated for Biometrics based bot detection. 
+
+![image-20220602175309366](../images/image-20220602175309366.png) 
+
+10. Double click on the log to see a Message with the explanation.
+
+![image-20220602175156291](../images/image-20220602175156291.png)
+
+That concludes the Biometrics based bot detection lab. 

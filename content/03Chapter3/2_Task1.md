@@ -1,23 +1,112 @@
 ---
-title: "Manual Hugo Build"
-menuTitle: "Legacy Hugo Build"
-chapter: false
-weight: 50
+title: "Task 1 - Bot Detection - Attack"
+menuTitle: "Bot Attack"
+weight: 1
 ---
 
-### Hugo Build
 
-When you're satisfied with Hugo view of your content in Hugo virtual server, issue a Hugo 'build' in the container CLI
+In this scenario you will attack an Web Shop Application with an shopping Bot which can be blocked by FortiWeb Bot detection.
 
-```shell
-    hugo --minify --cleanDestinationDir
+- Why is this important?
+
+In the last couple of years many online-shop owner noticed at a release of a brand new product, that within seconds their whole products were sold out. As the Shops were out of Stock, the products can be bought on e.g. eBay for sometimes double or triple of the original price.
+
+Some countries like have issued a law to permit the use of shopping bots. But there are not only "Bad Bots" out there in the WWW. So the challenge is to divide between the "good bots" like Google or Bing and the "bad bots"
+
+## Required Tools / Software Packages
+
+- Bot Script from the lab material ([Link](../Python_Scripts/simple_bot.py))
+- For the bot script to be installed on your kali machine just run the following command on the terminal which downloads the .zip folder for this repo. 
+        ```https://github.com/FortinetCloudCSE/fortiweb-threat-protection.git```
+
+- Python3 installed
+- Google Chrome Browser Installed
+- Dektop access of a Linux System
+
+## Preparations
+
+1. Install the necessary Python3 Modules:
+
+```bash
+$ python3 -m pip install selenium webdriver_manager requests
 ```
-        
-   - This command "builds" your Hugo site into the container's **_/public_** folder.  We used a docker disk mount to map this folder back to your local **_/docs_** folder, so the Hugo website will automatically be copied back into your local repo
-   - flag '--cleanDestinationDir' tells hugo to re-write the entire output directory with its build, so it will clear out template files/anything else that may be in there
-   - You can now exit the container with **ctrl + cd**, or command: **'exit'**
-   - When you exit the container, any files stored or changes you made to the container will be lost and cannot be recovered
-     - **_Remember_** we edited the /content folder on our local OS, so those changes were not made to the container and will not be lost
-     - Further, the disk mount from local's **_/docs_** to Container's **_public_** AUTOMATICALLY writes the hugo build to your local OS, so those changes will not be lost
-     - If you need to continue editing, just run a new container from your built image, and run hugo's webserver.  Everything is linked properly so it should just work
-   
+
+2. adjust the URL and "Bot data" at the top of the script as necessary:
+
+```python
+url = "http://juiceshopX.cloudteamapp.com:3000"
+credentials = {
+    "email": "test4@example.com",
+    "password": "12345$",
+    "sec_answer": "Dicey",
+}
+address = {
+    "country": "USA",
+    "name": "Botfather",
+    "mobile": "+1234567890",
+    "zip_code": "12345",
+    "address": "Street where the Bots live 1337",
+    "city": "San Francisco",
+}
+payment = {
+    "name": "Botfather",
+    "cardnr": "5519010974980551",
+    "month": "10",
+    "year": "2080"
+}
+```
+
+3. Open the Fortinet Juice Shop Page in the Google Chrome Browser just to make sure that you are able to reach the page.
+
+4. To open Google Chrome you can search in applications tab as shown below. 
+
+    ![kalilinux](../images/kalilinux.png)
+
+## Caution
+
+there are some limitations running the bot script:
+
+- The script only works on Linux or macOS. Windows is not possible as it has a strange Screen handling.
+- While running the script do not move the mouse or open any window etc.
+- Try to avoid any pop-up or notification which could distract the focus of the mouse/script while running
+
+
+## Let the Bot go shopping
+
+For documentation purpose the Documentation will only cover application hosted on localhost port 3000. Please adjust the documentation with the information provided as needed.
+
+1. Before executing the script, let's quickly get an overview what the Bot script will do:
+
+   The script will simulate real clicks and movements on the Web shop.
+
+   1. the bot will click on every product on the start page
+   2. then it will register a new user account for itself
+   3. it will login with the above created account
+   4. the bot will add a new shipping address
+   5. the bot will add a new payment method
+   6. the bot will put all available products into the shopping cart
+   7. the bot will checkout the shopping cart and buy all products
+
+2. After the preparations are done, execute script as follow:
+
+```bash
+cd Fortiweb-threat-protection/Python_Scripts
+$ python3 simple_bot.py```
+
+====== WebDriver manager ======
+Current google-chrome version is 99.0.4844
+Get LATEST chromedriver version for 99.0.4844 google-chrome
+Driver [/home/julian/.wdm/drivers/chromedriver/linux64/99.0.4844.51/chromedriver] found in cache
+[*] Using URL: http://localhost:3000/#/
+[+] Done clicking around on the Startpage
+[+] Done Register a new account
+[+] Done login to the Webshop
+[+] Done adding a new address to the Webshop
+[+] Payment successfully added!
+[+] Done adding a new payment method
+[+] Done putting all available stuff into shoppingcart
+[+] Done placing order; selecting address, delivery & payment
+
+```
+
+3. Now move on to the next chapter where you will learn on how to prevent such bot attacks and how to decide if it was a human or not.
