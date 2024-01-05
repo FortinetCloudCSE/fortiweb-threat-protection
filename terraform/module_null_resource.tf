@@ -50,7 +50,11 @@ provisioner "remote-exec" {
     "pip install ScoutSuite",
     "git clone https://github.com/RhinoSecurityLabs/pacu && mv ./pacu/ /home/azureuser/",
     "pip install -r /home/azureuser/pacu/requirements.txt",
-    "pip3 install cloudsplaining"
+    "pip3 install cloudsplaining",
+    "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
+    "sudo apt install ./google-chrome-stable_current_amd64.deb -y",
+    
+
   ]
 }
 
