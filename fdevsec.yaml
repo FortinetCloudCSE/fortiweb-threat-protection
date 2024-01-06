@@ -13,4 +13,4 @@ scanners:
   - container   
 
 resource:
-  serial_scan: false
+  serial_scan: true
